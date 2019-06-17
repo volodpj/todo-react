@@ -1,11 +1,27 @@
 import React from 'react';
 
 function TodoContent(props) {
+    
     return (
+        
         <section className="main">
             <input id="toggle-all" className="toggle-all" type="checkbox" />
-            <label for="toggle-all">Mark all as complete</label>
-            <ul className="todo-list"></ul>
+            <label htmlFor="toggle-all">Mark all as complete</label>
+            <ul className="todo-list">
+               {Object.keys(props.todoList).map((todo) => {
+                    return (
+                        <li>
+                            <div className='view'>
+                                <input className="toggle" type="checkbox"
+                                    onClick ={ () => props.checkActiv( todo ) }
+                                />
+                                <label>{ props.todoList[todo]['text'] }</label>
+                                <button className="destroy"></button>
+                            </div>
+                        </li>
+                    )
+               })}
+            </ul>
         </section>
     )
 
