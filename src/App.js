@@ -40,7 +40,7 @@ class App extends React.Component  {
                         ...this.state.todos,
                         [newKey]: {
                             'text': newTodo,
-                            'activ': 'activ'
+                            'activ': true
                         }
                     }
                 })
@@ -49,12 +49,32 @@ class App extends React.Component  {
 
         this.checkStatus = (event) => {
             
-            let newData = this
-          
+            this.setState((prevState) => {
+                let newData = prevState.todos;
+                newData[event]['activ'] ? 
+                newData[event]['activ'] = false :
+                newData[event]['activ'] = true;
+                return {
+                    todos : newData
+                }
+            })
+        }
+
+        this.deleteTask = (task) => {
+
+            this.setState((prevState) => {
+                let newData = prevState.todos;
+                delete newData[task]
+                return {
+                    todos : newData
+                }
+            })
         }
     };
 
+
     render(){
+        console.log(this.state.todos)
         return (
             <div className="App">
                 <section className="todoapp">
@@ -70,6 +90,7 @@ class App extends React.Component  {
                     <TodoContent 
                         todoList = { this.state.todos } 
                         checkActiv = { this.checkStatus }
+                        deleteTask = { this.deleteTask }
                     />
     
                     <footer className="footer" >
