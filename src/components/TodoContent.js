@@ -10,13 +10,20 @@ function TodoContent(props) {
             <ul className="todo-list">
                {Object.keys(props.todoList).map((todo) => {
                     return (
-                        <li className={ props.todoList[todo]['activ'] ? 'activ' : 'completed' }>
+                        <li 
+                            className={ props.todoList[todo]['activ'] ? 'activ' : 'completed' } 
+                            key={ todo }
+                        >
                             <div className='view'>
-                                <input className="toggle" type="checkbox"
+                                <input 
+                                    className="toggle" type="checkbox"
                                     onClick ={ () => props.checkActiv( todo ) }
                                 />
                                 <label>{ props.todoList[todo]['text'] }</label>
-                                <button className="destroy" onClick={ () => props.deleteTask( todo ) }></button>
+                                <button 
+                                    className="destroy" 
+                                    onClick={ () => props.deleteTask( todo ) }
+                                ></button>
                             </div>
                         </li>
                     )

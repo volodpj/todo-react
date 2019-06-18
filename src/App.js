@@ -47,13 +47,13 @@ class App extends React.Component  {
             }    
         };
 
-        this.checkStatus = (event) => {
+        this.checkStatus = (task) => {
             
             this.setState((prevState) => {
                 let newData = prevState.todos;
-                newData[event]['activ'] ? 
-                newData[event]['activ'] = false :
-                newData[event]['activ'] = true;
+                newData[task]['activ'] ? 
+                newData[task]['activ'] = false :
+                newData[task]['activ'] = true;
                 return {
                     todos : newData
                 }
@@ -69,12 +69,25 @@ class App extends React.Component  {
                     todos : newData
                 }
             })
+        };
+
+        this.counter = () => {
+
+            let data = this.state.todos;
+            let test = Object.keys(data).filter((key) => {
+                return data[key]['activ']
+            })
+            return test.length
+        }
+
+        this.filterActive = () => {
+
         }
     };
 
 
     render(){
-        console.log(this.state.todos)
+        
         return (
             <div className="App">
                 <section className="todoapp">
@@ -94,7 +107,7 @@ class App extends React.Component  {
                     />
     
                     <footer className="footer" >
-                        <span className="todo-count"><strong>0</strong> items left</span>
+                        <span className="todo-count"><strong>{ this.counter() }</strong> items left</span>
                         <ul className="filters">
                             <li>
                                 <a href="#123" className="selected">All</a>
