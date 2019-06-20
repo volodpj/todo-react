@@ -7,45 +7,14 @@ class App extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
+
+            mainContent: 'all',
+            newTask: '',
             todos: {
                
             }
           }
         
-        this.generateNewId = () => {
-            let id = [];
-            for(let i = 0; i < 5; i++ ){
-                id = [
-                    ...id,
-                    this.getRandomIntInclusive(0,9)
-                ]
-            };
-            return id.join('')
-        }
-
-        this.getRandomIntInclusive = (min, max) => {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-          }
-        
-        this.addTodo = (event) => {
-            
-            if (event.key === "Enter") {
-                let newTodo = event.target.value;
-                let newKey = this.generateNewId();
-                event.target.value = '';
-                this.setState({
-                    todos: {
-                        ...this.state.todos,
-                        [newKey]: {
-                            'text': newTodo,
-                            'activ': true
-                        }
-                    }
-                })
-            }    
-        };
 
         this.checkStatus = (task) => {
             
@@ -80,30 +49,73 @@ class App extends React.Component  {
             return test.length
         }
 
-        this.filterActive = () => {
 
-        }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     };
+
+    changeActive = () => {
+        this.setState({
+            mainContent: 'active',
+        })
+    };
+
+    handleChange(event) {
+        this.setState({newTask: event.target.value});
+      }
+
+    handleSubmit(event) {
+        let newKey = Date.now();
+        event.preventDefault();
+        this.setState({
+                todos: {
+                    ...this.state.todos,
+                    [newKey]: {
+                        id: newKey,
+                        'text': this.state.newTask,
+                        'activ': true,
+                    }
+                },
+                newTask: '',
+        });
+        
+       
+      }
 
 
     render(){
         
+
+        const filtersTodo = Object.keys(this.state.todos)
+            .filter((key) => {
+                return this.state.todos[key]['activ']
+            })
+            .map(key => {
+                return this.state.todos[key]
+            });
+
+        console.log(filtersTodo);
+
         return (
             <div className="App">
                 <section className="todoapp">
     
                     <header className="header">
                         <h1>todos</h1>
-                        <input className="new-todo"
-                            placeholder="What needs to be done?" 
-                            onKeyPress={ this.addTodo }
-                        />
+                        <form onSubmit={this.handleSubmit}>
+                            <input className="new-todo"
+                                placeholder="What needs to be done?" 
+                                value={this.state.newTask }
+                                onChange={ this.handleChange }
+                            />
+                        </form>
+                        
                     </header>
     
                     <TodoContent 
-                        todoList = { this.state.todos } 
-                        checkActiv = { this.checkStatus }
-                        deleteTask = { this.deleteTask }
+                        todoList={ (this.state.mainContent === 'active') ? filtersTodo : this.state.todos } 
+                        checkActiv={ this.checkStatus }
+                        deleteTask={ this.deleteTask }
                     />
     
                     <footer className="footer" >
@@ -113,7 +125,7 @@ class App extends React.Component  {
                                 <a href="#123" className="selected">All</a>
                             </li>
                             <li>
-                                <a href="#11">Active</a>
+                                <a href="#11" onClick={ this.changeActive }>Active</a>
                             </li>
                             <li>
                                 <a href="#11">Completed</a>
