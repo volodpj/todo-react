@@ -17,7 +17,7 @@ function TodoContent(props) {
                             <div className='view'>
                                 <input 
                                     className="toggle" type="checkbox"
-                                    onClick ={ () => props.checkActiv( todo ) }
+                                    onClick={ () => props.checkActiv( todo ) }
                                 />
                                 <label>{ props.todoList[todo]['text'] }</label>
                                 <button 
