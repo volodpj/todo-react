@@ -7,21 +7,11 @@ class App extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
-            todos: {
-               
-            }
+            todos: {},
+    
           }
         
-        this.generateNewId = () => {
-            let id = [];
-            for(let i = 0; i < 5; i++ ){
-                id = [
-                    ...id,
-                    this.getRandomIntInclusive(0,9)
-                ]
-            };
-            return id.join('')
-        }
+        
 
         this.getRandomIntInclusive = (min, max) => {
             min = Math.ceil(min);
@@ -35,6 +25,7 @@ class App extends React.Component  {
                 let newTodo = event.target.value;
                 let newKey = this.generateNewId();
                 event.target.value = '';
+
                 this.setState({
                     todos: {
                         ...this.state.todos,
@@ -44,6 +35,7 @@ class App extends React.Component  {
                         }
                     }
                 })
+              
             }    
         };
 
@@ -81,13 +73,25 @@ class App extends React.Component  {
         }
 
         this.filterActive = () => {
-
+            
+            
         }
     };
 
+    generateNewId = () => {
+        let id = [];
+        for(let i = 0; i < 5; i++ ){
+            id = [
+                ...id,
+                this.getRandomIntInclusive(0,9)
+            ]
+        };
+        return id.join('')
+    }
+
 
     render(){
-        
+        console.log(this.state.todos)
         return (
             <div className="App">
                 <section className="todoapp">
@@ -113,7 +117,7 @@ class App extends React.Component  {
                                 <a href="#123" className="selected">All</a>
                             </li>
                             <li>
-                                <a href="#11">Active</a>
+                                <a href="#11" onClick={ () => this.filterActive() }>Active</a>
                             </li>
                             <li>
                                 <a href="#11">Completed</a>
