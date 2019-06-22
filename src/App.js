@@ -8,115 +8,109 @@ class App extends React.Component  {
         super(props);
         this.state = {
             stateContent: 'all',
-            mainContent: true,
             newTask: '',
-            todos: {},
-            filterTodos: [],
+            todos: [],
           }
-        
-
-        this.checkStatus = (task) => {
-            
-            this.setState((prevState) => {
-                let newData = prevState.todos;
-                newData[task]['activ'] ? 
-                newData[task]['activ'] = false :
-                newData[task]['activ'] = true;
-                return {
-                    todos : newData
-
-                }
-            })
-        }
-
-        this.deleteTask = (task) => {
-
-            this.setState((prevState) => {
-                let newData = prevState.todos;
-                delete newData[task]
-                return {
-                    todos : newData
-                }
-            })
-        };
-
-        this.counter = () => {
-
-            let data = this.state.todos;
-            let test = Object.keys(data).filter((key) => {
-                return data[key]['activ']
-            })
-            return test.length
-        }
-
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
         
-
     };
 
-    f = (condition) => {
-        let filtersTodo = [];
-        if(condition === 'active'){
-            filtersTodo = Object.keys(this.state.todos)
-            .filter((key) => {
-                return this.state.todos[key]['activ']
-            })
-            .map(key => {
-                return this.state.todos[key]
-            });
-            this.setState({
-                mainContent: false,
-            })
-        }else if(condition === 'completed'){
-            filtersTodo = Object.keys(this.state.todos)
-            .filter((key) => {
-                return !this.state.todos[key]['activ']
-            })
-            .map(key => {
-                return this.state.todos[key]
-            });
-            this.setState({
-                mainContent: false,
-            })
-        }else if(condition === 'all'){
-            this.setState({
-                mainContent: true,
-            })
-        }
+    deleteTask = (index) => {
 
+        this.setState((prevState) => {
+            let newData = prevState.todos;
+            newData.splice(index, 1)
+            return {
+                todos : newData
+            }
+        })
+    };
+
+    filterTofosFoo = () => {
+        this.data = this.state.todos;
+        if(this.state.stateContent === 'active'){
+            this.filtersT = this.data.filter((key) => {
+                return key['activ']
+            })
+            return this.filtersT
+        }else if(this.state.stateContent === 'completed'){
+            this.filtersT = this.data.filter((key) => {
+                return !key['activ']
+            })
+            return this.filtersT
+        }
+        
+    };
+
+    checkStatus = (task) => {
+        
+        let newData = this.state.todos;
+        
+            newData[task]['activ'] ? 
+            newData[task]['activ'] = false :
+            newData[task]['activ'] = true;
+        this.setState({
+                todos : newData,
+        })
+        
+    }
+
+    counter = () => {
+
+        let data = this.state.todos;
+        let test = data.filter((key) => {
+            return key['activ']
+        })
+        return test.length
+    }
+
+    checkContent = (condition) => {
         this.setState({
             stateContent: condition,
-            filterTodos: filtersTodo,
         })
     }
 
 
     handleChange(event) {
-        this.setState({newTask: event.target.value});
+        
+            this.setState({newTask: event.target.value});
+        
+        
       }
 
     handleSubmit(event) {
-        let newKey = Date.now();
-        event.preventDefault();
-        this.setState({
-                todos: {
+        if(this.state.newTask !== ''){
+            let newKey = Date.now();
+            event.preventDefault();
+            this.setState({
+                todos: [
                     ...this.state.todos,
-                    [newKey]: {
+                    {
                         id: newKey,
-                        'text': this.state.newTask,
-                        'activ': true,
+                        text: this.state.newTask,
+                        activ: true,
                     }
-                },
+                ],
                 newTask: '',
-        });
+            });
+        }
+ 
       }
 
-
+    clearCompleted = () => {
+        this.data = this.state.todos;
+        this.filtersT = this.data.filter((key) => {
+            return key['activ']
+        })
+        this.setState({
+            todos: this.filtersT
+        })
+    }
 
     render(){
+        let filterTodos = this.filterTofosFoo();
         
         return (
             <div className="App">
@@ -134,7 +128,7 @@ class App extends React.Component  {
                     </header>
     
                     <TodoContent 
-                        todoList={ (this.state.mainContent) ? this.state.todos : this.state.filterTodos } 
+                        todoList={ (this.state.stateContent !== 'all') ? filterTodos : this.state.todos } 
                         checkActiv={ this.checkStatus }
                         deleteTask={ this.deleteTask }
                     />
@@ -143,16 +137,16 @@ class App extends React.Component  {
                         <span className="todo-count"><strong>{ this.counter() }</strong> items left</span>
                         <ul className="filters">
                             <li>
-                                <a href="#1" className="selected" onClick={ () => { this.f('all') } }>All</a>
+                                <a href="#1" className={ (this.state.stateContent === 'all') ? "selected" : 'none'} onClick={ () => { this.checkContent('all') } }>All</a>
                             </li>
                             <li>
-                                <a href="#1" onClick={ () => { this.f('active') } }>Active</a>
+                                <a href="#1" className={ (this.state.stateContent === 'active') ? "selected" : 'none'} onClick={ () => { this.checkContent('active') } }>Active</a>
                             </li>
                             <li>
-                                <a href="#1" onClick={ () => {this.f('completed')} }>Completed</a>
+                                <a href="#1" className={ (this.state.stateContent === 'completed') ? "selected" : 'none'} onClick={ () => {this.checkContent('completed')} }>Completed</a>
                             </li>
                         </ul>
-                        <button className="clear-completed" ></button>
+                        <button className="clear-completed" onClick={() => {this.clearCompleted()}}>{(this.counter() < this.state.todos.length) ? 'clear' : ''}</button>
                     </footer>
     
                 </section>
