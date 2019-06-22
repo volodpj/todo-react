@@ -8,15 +8,22 @@ function TodoContent(props) {
             <input id="toggle-all" className="toggle-all" type="checkbox" />
             <label htmlFor="toggle-all">Mark all as complete</label>
             <ul className="todo-list">
-               {Object.keys(props.todoList).map((todo) => {
+               { props.todoList.map((todo, index) => {
                     return (
-                        <li className={ props.todoList[todo]['activ'] ? 'activ' : 'completed' }>
+                        <li 
+                            className={ todo['activ'] ? 'activ' : 'completed' } 
+                            key={ todo['id'] }
+                        >
                             <div className='view'>
-                                <input className="toggle" type="checkbox"
-                                    onClick ={ () => props.checkActiv( todo ) }
+                                <input 
+                                    className="toggle" type="checkbox"
+                                    onClick={ () => props.checkActiv( index ) }
                                 />
-                                <label>{ props.todoList[todo]['text'] }</label>
-                                <button className="destroy" onClick={ () => props.deleteTask( todo ) }></button>
+                                <label>{ todo['text'] }</label>
+                                <button 
+                                    className="destroy" 
+                                    onClick={ () => props.deleteTask( index ) }
+                                ></button>
                             </div>
                         </li>
                     )
